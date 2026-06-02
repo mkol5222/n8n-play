@@ -22,7 +22,7 @@
 	},
 
 	// Use 'postStartCommand' to run commands each time the container starts.
-	"postStartCommand": "sh -lc 'docker volume inspect n8n_data >/dev/null 2>&1 || docker volume create n8n_data >/dev/null; if docker container inspect n8n >/dev/null 2>&1; then if [ \"$(docker container inspect -f {{.State.Running}} n8n)\" != \"true\" ]; then docker start n8n >/dev/null; fi; else docker run -d --restart unless-stopped --name n8n -p 5678:5678 -e GENERIC_TIMEZONE=Europe/Prague -e TZ=Europe/Prague -e N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true -e N8N_RUNNERS_ENABLED=true -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n >/dev/null; fi'"
+	"postStartCommand": "sh -lc 'docker volume inspect n8n_data >/dev/null 2>&1 || docker volume create n8n_data >/dev/null; if docker container inspect n8n >/dev/null 2>&1; then if [ \"$(docker container inspect -f {{.State.Running}} n8n)\" != \"true\" ]; then docker start n8n >/dev/null; fi; else docker run -d --restart unless-stopped --name n8n -p 5678:5678 -e GENERIC_TIMEZONE=Europe/Prague -e TZ=Europe/Prague -e N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true -e N8N_RUNNERS_ENABLED=true -e WEBHOOK_URL=\"${CODESPACE_NAME}-5678.githubpreview.dev\" -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n >/dev/null; fi'"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
