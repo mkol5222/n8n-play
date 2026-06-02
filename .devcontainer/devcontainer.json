@@ -1,0 +1,32 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+{
+	"name": "Ubuntu",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/base:noble",
+	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:3": {},
+		"ghcr.io/devcontainers-extra/features/node-asdf:0": {}
+	},
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [5678],
+	"portsAttributes": {
+		"5678": {
+			"label": "n8n",
+			"onAutoForward": "openBrowser"
+		}
+	},
+
+	// Use 'postStartCommand' to run commands each time the container starts.
+	"postStartCommand": "sh -lc 'docker volume inspect n8n_data >/dev/null 2>&1 || docker volume create n8n_data >/dev/null; if docker container inspect n8n >/dev/null 2>&1; then if [ \"$(docker container inspect -f {{.State.Running}} n8n)\" != \"true\" ]; then docker start n8n >/dev/null; fi; else docker run -d --restart unless-stopped --name n8n -p 5678:5678 -e GENERIC_TIMEZONE=Europe/Prague -e TZ=Europe/Prague -e N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true -e N8N_RUNNERS_ENABLED=true -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n >/dev/null; fi'"
+
+	// Configure tool-specific properties.
+	// "customizations": {},
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
